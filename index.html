@@ -888,7 +888,7 @@
     <section id="staff-dashboard" style="display: none;">
         <!-- Navigation Bar -->
         <nav class="dashboard-nav">
-            <img src="assets/snapserv-logo.png" alt="Snapserv Logo" class="snapserv-logo">
+            <img src="assets/snapserv.png" alt="Snapserv Logo" class="snapserv-logo">
             <button class="nav-btn back-btn" onclick="goBackToIntake()">Back to Check-In</button>
         </nav>
 
@@ -1157,6 +1157,20 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
+        auth.onAuthStateChanged(user => {
+        if (user) {
+          // already signed in (anonymous or email/password)
+          console.log('Signed in as', user.uid, 'isAnonymous:', user.isAnonymous);
+        } else {
+          // sign in anonymously for guest checkins (this satisfies request.auth != null)
+          auth.signInAnonymously()
+            .then(() => console.log('Anonymous auth signed in'))
+            .catch(err => {
+              console.error('Anonymous auth failed', err);
+              // showing a friendly message to staff
+            });
+        }
+        
         // ==================== NAVIGATION & PAGE SWITCHING ====================
         
         // Scroll from cover page to intake page

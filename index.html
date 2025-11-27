@@ -1157,19 +1157,26 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
+        let isAuthenticated = false;
+
         auth.onAuthStateChanged(user => {
         if (user) {
           // already signed in (anonymous or email/password)
           console.log('Signed in as', user.uid, 'isAnonymous:', user.isAnonymous);
+          isAuthenticated = true;
         } else {
           // sign in anonymously for guest checkins (this satisfies request.auth != null)
           auth.signInAnonymously()
-            .then(() => console.log('Anonymous auth signed in'))
+            .then(() => {
+              console.log('Anonymous auth signed in');
+              isAuthenticated = true;
+            })
             .catch(err => {
               console.error('Anonymous auth failed', err);
-              // showing a friendly message to staff
+              alert('Authentication failed. Please refresh the page.');
             });
         }
+        });
         
         // ==================== NAVIGATION & PAGE SWITCHING ====================
         
